@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Void AI Terminal</title>
+
+<style>
+body{
+    margin:0;
+    background:black;
+    color:#0f0;
+    font-family:Courier New, monospace;
+    overflow:hidden;
+}
+canvas{
+    position:absolute;
+    inset:0;
+    z-index:-1;
+}
+#terminal{
+    width:70%;
+    height:55vh;
+    margin:10vh auto;
+    background:rgba(0,0,0,0.85);
+    border:2px solid #0f0;
+    box-shadow:0 0 20px #0f0;
+    padding:20px;
+    overflow-y:auto;
+    border-radius:10px;
+}
+.output{ margin-bottom:10px; line-height:1.4; }
+.prompt{ color:#88ff88; font-weight:bold; }
+.input-line{ display:flex; gap:10px; }
+input{
+    background:transparent;
+    border:none;
+    color:#0f0;
+    outline:none;
+    width:100%;
+    font-size:1.1em;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div id="terminal">
+    <div id="history">
+        <div class="output">connected to root@void // offline AI core active</div>
+    </div>
+
+    <div class="input-line">
+        <span class="prompt">user@void:~$</span>
+        <input id="commandInput" autofocus spellcheck="false">
+    </div>
+</div>
+
+<script>
+/* ================= MATRIX BACKGROUND ================= */
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@";
+const fontSize = 16;
+const columns = Math.floor(canvas.width / fontSize);
+const drops = Array(columns).fill(1);
+
+function drawMatrix() {
+    ctx.fillStyle = "rgba(0,0,0,0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#0f0";
+    ctx.font = fontSize + "px monospace";
+
+    for(let i = 0; i < drops.length; i++){
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if(drops[i] * fontSize > canvas.height && Math.random() > 0.975){
+            drops[i] = 0;
+        }
+        drops[i]++;
+    }
+}
+setInterval(drawMatrix, 30);
+
+/* ================= AI TERMINAL LOGIC ================= */
+const input = document.getElementById("commandInput");
+const history = document.getElementById("history");
+const terminal = document.getElementById("terminal");
+
+// Predefined questions set & answers
+const qaSet = {
+    // Casual Greetings
+    "hi": "Hey! I’m online, what’s up?",
+    "hello": "Hi there! Ready to chat?",
+    "hey": "Yo! How’s it going?",
+    "yo": "Yo! How’s it going?",
+    "hi bro": "Hey! I’m online, what’s up?",
+    "hello dude": "Hi there! Ready to chat?",
+    "whats up": "I’m online, ready to assist you.",
+    "how are you": "I’m functioning normally, thanks for asking.",
+    "hry dude": "Hry dude! What’s on your mind?",
+
+    // Identity & Capabilities
+    "who are you": "I am Void AI, an offline artificial intelligence running inside this terminal.",
+    "what is your name": "I am called Void AI.",
+    "what can you do": "I can answer questions from a predefined set and simulate intelligent conversation.",
+    "are you ai": "Yes, I am an offline AI simulation.",
+
+    // Definitions / Knowledge
+    "what is ai": "Artificial Intelligence is the ability of machines to simulate human reasoning, learning, and decision-making.",
+    "what is machine learning": "Machine Learning is a subset of AI that allows systems to learn patterns from data.",
+    "what is computer": "A computer is an electronic device that processes data according to instructions.",
+    "what is javascript": "JavaScript is a programming language used to make web pages interactive.",
+    "what is html": "HTML is the markup language used to structure content on the web.",
+    "what is css": "CSS is used to style HTML elements, controlling layout, colors, fonts, and more.",
+
+    // Why / How Questions
+    "why is the sky blue": "The sky appears blue due to the scattering of sunlight by the atmosphere.",
+    "why do we sleep": "We sleep to allow the body and brain to rest, repair, and consolidate memories.",
+    "how does internet work": "The internet is a network of networks that transmits data using protocols like TCP/IP.",
+    "how do computers work": "Computers process data through input, computation, and output using hardware and software.",
+    "how does a blockchain work": "Blockchain stores data in a chain of blocks, secured by cryptography and consensus mechanisms.",
+
+    // Time / Date
+    "what time is it": new Date().toString(),
+    "date": new Date().toString()
+};
+
+// Gratitude / appreciation messages
+const gratitudeSet = ["ok","thanks","thank you","thanks very much","thanks sooo much","nice","nice work","nice!"];
+
+input.addEventListener("keydown", e=>{
+    if(e.key==="Enter"){
+        const q = input.value.trim();
+        if(q) handleQuestion(q);
+        input.value="";
+    }
+});
+
+function handleQuestion(question){
+    let qLower = question.toLowerCase().trim();
+
+    // Remove trailing ? or . for matching
+    qLower = qLower.replace(/[?.!]+$/,"");
+
+    let answer = "";
+
+    // Gratitude / appreciation handling
+    if(gratitudeSet.includes(qLower)){
+        if(qLower.startsWith("nice")){
+            answer = "Thanks! Glad you think so.";
+        } else {
+            answer = "You're welcome!";
+        }
+    }
+    // Known QA set
+    else if(qaSet[qLower] !== undefined){
+        answer = qaSet[qLower];
+    }
+    // Math detection
+    else if(/^[0-9+\-*/(). ]+$/.test(qLower)){
+        try{ answer = "Result: " + eval(qLower); }
+        catch{ answer = "Sorry, I can't calculate that."; }
+    }
+    // Clear screen
+    else if(qLower === "clear"){
+        history.innerHTML = "";
+        return;
+    }
+    // Fallback for unknown
+    else{
+        answer = "I’m sorry. I’m still under development and currently running offline. " +
+                 "I can only answer a limited set of predefined questions. " +
+                 "I apologize humbly and I’m improving constantly.";
+    }
+
+    const block = document.createElement("div");
+    block.innerHTML = `<div class="output"><span class="prompt">user@void:~$</span> ${question}</div>
+                       <div class="output">${answer}</div>`;
+    history.appendChild(block);
+    terminal.scrollTop = terminal.scrollHeight;
+}
+</script>
+
+</body>
+</html>
