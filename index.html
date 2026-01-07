@@ -21,7 +21,11 @@ canvas{
     width:70%;
     height:55vh;
     margin:10vh auto;
-    background:rgba(0,0,0,0.85);
+    background: url("terminal-bg.png");  /* your image file name */
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+
     border:2px solid #fff;
     box-shadow:0 0 20px #fff;
     padding:20px;
@@ -38,6 +42,13 @@ input{
     outline:none;
     width:100%;
     font-size:1.25em;
+}
+#terminal .output,
+#terminal .prompt,
+#terminal input {
+    background: rgba(0,0,0,0.6);  /* dark highlight behind text */
+    padding: 4px 6px;
+    border-radius: 4px;
 }
 </style>
 </head>
@@ -211,4 +222,5 @@ function handleQuestion(question){
 
 </body>
 </html>
+
 
