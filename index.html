@@ -94,39 +94,28 @@ const input = document.getElementById("commandInput");
 const history = document.getElementById("history");
 const terminal = document.getElementById("terminal");
 
-// Predefined questions set & answers
-const qaSet = {
-    "hi": "Hey! I’m online, what’s up?",
-    "hello": "Hi there! Ready to chat?",
-    "hey": "Yo! How’s it going?",
-    "yo": "Yo! How’s it going?",
-    "hi bro": "Hey! I’m online, what’s up?",
-    "hello dude": "Hi there! Ready to chat?",
-    "whats up": "I’m online, ready to assist you.",
-    "how are you": "I’m functioning normally, thanks for asking.",
-    "hry dude": "Hry dude! What’s on your mind?",
+const responses = [
+    { keys:["hi","hello","hey","yo","hi bro","hello dude","hry dude"], reply:"Hey! I’m online, what’s up?" },
+    { keys:["whats up","how are you"], reply:"I’m functioning normally and ready to assist." },
 
-    "who are you": "I am Void AI, an offline artificial intelligence running inside this terminal.",
-    "what is your name": "I am called Void AI.",
-    "what can you do": "I can answer questions from a predefined set and simulate intelligent conversation.",
-    "are you ai": "Yes, I am an offline AI simulation.",
+    { keys:["who are you","who r you"], reply:"I am Void AI, an offline artificial intelligence running inside this terminal." },
+    { keys:["what is your name","your name"], reply:"I am called Void AI." },
+    { keys:["what can you do","what can u do"], reply:"I answer predefined questions, solve math, and simulate intelligence offline." },
+    { keys:["are you ai","are u ai"], reply:"Yes. I am an offline AI simulation." },
 
-    "what is ai": "Artificial Intelligence is the ability of machines to simulate human reasoning, learning, and decision-making.",
-    "what is machine learning": "Machine Learning is a subset of AI that allows systems to learn patterns from data.",
-    "what is computer": "A computer is an electronic device that processes data according to instructions.",
-    "what is javascript": "JavaScript is a programming language used to make web pages interactive.",
-    "what is html": "HTML is the markup language used to structure content on the web.",
-    "what is css": "CSS is used to style HTML elements, controlling layout, colors, fonts, and more.",
+    { keys:["what is ai"], reply:"Artificial Intelligence enables machines to simulate human intelligence." },
+    { keys:["what is machine learning"], reply:"Machine learning allows systems to learn patterns from data." },
+    { keys:["what is computer"], reply:"A computer processes data using hardware and software." },
+    { keys:["what is javascript"], reply:"JavaScript makes web pages interactive." },
+    { keys:["what is html"], reply:"HTML structures web content." },
+    { keys:["what is css"], reply:"CSS styles and designs web pages." },
 
-    "why is the sky blue": "The sky appears blue due to the scattering of sunlight by the atmosphere.",
-    "why do we sleep": "We sleep to allow the body and brain to rest, repair, and consolidate memories.",
-    "how does internet work": "The internet is a network of networks that transmits data using protocols like TCP/IP.",
-    "how do computers work": "Computers process data through input, computation, and output using hardware and software.",
-    "how does a blockchain work": "Blockchain stores data in a chain of blocks, secured by cryptography and consensus mechanisms.",
-
-    "what time is it": new Date().toString(),
-    "date": new Date().toString()
-};
+    { keys:["why is the sky blue"], reply:"Because shorter blue wavelengths scatter more in the atmosphere." },
+    { keys:["why do we sleep"], reply:"Sleep helps the brain and body recover and store memories." },
+    { keys:["how does internet work"], reply:"The internet transfers data via interconnected networks using protocols." },
+    { keys:["how do computers work"], reply:"Computers take input, process it, and produce output." },
+    { keys:["how does a blockchain work"], reply:"Blockchain stores data in secure, linked blocks using cryptography." }
+];
 
 const gratitudeSet = ["ok","thanks","thank you","thanks very much","thanks sooo much","nice","nice work","nice!"];
 
@@ -139,33 +128,48 @@ input.addEventListener("keydown", e=>{
 });
 
 function handleQuestion(question){
-    let qLower = question.toLowerCase().trim();
-    qLower = qLower.replace(/[?.!]+$/,"");
-
+    let q = question.toLowerCase().trim().replace(/[?.!]+$/,"");
     let answer = "";
 
-    if(gratitudeSet.includes(qLower)){
-        if(qLower.startsWith("nice")){
-            answer = "Thanks! Glad you think so.";
-        } else {
-            answer = "You're welcome!";
-        }
-    }
-    else if(qaSet[qLower] !== undefined){
-        answer = qaSet[qLower];
-    }
-    else if(/^[0-9+\-*/(). ]+$/.test(qLower)){
-        try{ answer = "Result: " + eval(qLower); }
-        catch{ answer = "Sorry, I can't calculate that."; }
-    }
-    else if(qLower === "clear"){
+    if(q === "clear"){
         history.innerHTML = "";
         return;
     }
+
+    if(q === "what time is it" || q === "date"){
+        answer = new Date().toString();
+    }
+    else if(gratitudeSet.includes(q)){
+        answer = q.startsWith("nice") ? "Thanks! Glad you think so." : "You're welcome!";
+    }
     else{
-        answer = "I’m sorry. I’m still under development and currently running offline. " +
-                 "I can only answer a limited set of predefined questions. " +
-                 "I apologize humbly and I’m improving constantly.";
+        for(let r of responses){
+            if(r.keys.some(k => q.includes(k))){
+                answer = r.reply;
+                break;
+            }
+        }
+    }
+
+    /* ===== ADVANCED MATH ENGINE ===== */
+    if(!answer){
+        try{
+            let expr = q
+                .replace(/\^/g,"**")
+                .replace(/sqrt\(([^)]+)\)/g,"Math.sqrt($1)")
+                .replace(/avg\(([^)]+)\)/g,"($1).split(',').map(Number).reduce((a,b)=>a+b)/($1.split(',').length)")
+                .replace(/min\(([^)]+)\)/g,"Math.min($1)")
+                .replace(/max\(([^)]+)\)/g,"Math.max($1)")
+                .replace(/(\d+)\s*%\s*of\s*(\d+)/g,"($1/100)*$2");
+
+            if(/^[0-9+\-*/().,<>=! ]+$/.test(expr)){
+                answer = "Result: " + eval(expr);
+            }
+        }catch{}
+    }
+
+    if(!answer){
+        answer = "I’m still under development. I can only answer specific questions and math expressions.";
     }
 
     const block = document.createElement("div");
