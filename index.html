@@ -22,6 +22,7 @@ canvas{
     height:55vh;
     margin:10vh auto;
     background: url("https://i.postimg.cc/xCW7Cmyw/f9a59a60-003a-4d7f-90ee-843b0851fd72.png");
+");  /* your image file name */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -73,23 +74,14 @@ input{
 /* ================= MATRIX BACKGROUND ================= */
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
 const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@";
 const fontSize = 18;
-let columns = 0;
-let drops = [];
-
-// Set canvas size and recalc columns/drops properly
-function setCanvasSize(){
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    columns = Math.floor(canvas.width / fontSize);
-    drops.length = columns;
-    for(let i = 0; i < columns; i++){
-        drops[i] = 1; // initialize each drop
-    }
-}
-setCanvasSize();
-window.addEventListener("resize", setCanvasSize);
+const columns = Math.floor(canvas.width / fontSize);
+const drops = Array(columns).fill(1);
 
 function drawMatrix() {
     ctx.fillStyle = "rgba(0,0,0,0.05)";
@@ -115,7 +107,7 @@ const input = document.getElementById("commandInput");
 const history = document.getElementById("history");
 const terminal = document.getElementById("terminal");
 
-const gratitudeSet = ["ok","thanks","thank you","thanks very much","thanks sooo much","nice","nice work","nice!","thanks a lot","thanks bro"];
+const gratitudeSet = ["ok","thanks","thank you","thanks very much","thanks sooo much","nice","nice work","nice!"];
 
 input.addEventListener("keydown", e=>{
     if(e.key==="Enter"){
@@ -148,16 +140,16 @@ function handleQuestion(question){
         answer = q.startsWith("nice") ? "Thanks! Glad you think so." : "You're welcome!";
     }
 
-    /* greetings */
-    else if(/^(hi|hello|hey|yo|hi bro|hello dude|hry dude|whats up|good morning|good afternoon|good evening)$/.test(q)){
+    /* greetings — ONLY if greeting-like */
+    else if(/^(hi|hello|hey|yo|hi bro|hello dude|hry dude|whats up)$/.test(q)){
         answer = "Hey! I’m online, what’s up?";
     }
 
-    /* identity / AI info */
+    /* identity */
     else if(q.includes("who are you")){
         answer = "I am Void AI, an offline artificial intelligence running inside this terminal.";
     }
-    else if(q.includes("your name") || q.includes("what is your name")){
+    else if(q.includes("your name")){
         answer = "I am called Void AI.";
     }
     else if(q.includes("what can you do")){
@@ -166,45 +158,8 @@ function handleQuestion(question){
     else if(q.includes("are you ai")){
         answer = "Yes, I am an offline AI simulation.";
     }
-    else if(q.includes("tell me about yourself")){
-        answer = "I am Void AI, designed to simulate intelligent conversation offline.";
-    }
-    else if(q.includes("who made you")){
-        answer = "Sriram Pathruni";
 
-    /* new questions (your choice) */
-    } else if(q.startsWith("define computer")){
-        answer = "A computer is an electronic device that processes data according to instructions.";
-    } else if(q.startsWith("define ai")){
-        answer = "Artificial Intelligence is the ability of machines to simulate human reasoning, learning, and decision-making.";
-    } else if(q.startsWith("define machine learning")){
-        answer = "Machine Learning is a subset of AI that allows systems to learn patterns from data.";
-    } else if(q.startsWith("what is programming")){
-        answer = "Programming is the process of writing instructions for computers to perform tasks.";
-    } else if(q.startsWith("what is software")){
-        answer = "Software is a set of programs that perform specific tasks on a computer.";
-    } else if(q.startsWith("what is hardware")){
-        answer = "Hardware refers to the physical components of a computer system.";
-    } else if(q.startsWith("what is the internet")){
-        answer = "The internet is a global network of interconnected computers that communicate using standardized protocols.";
-    } else if(q.includes("explain blockchain") || q.includes("how does blockchain work")){
-        answer = "Blockchain stores data in a chain of blocks, secured by cryptography and consensus mechanisms.";
-    } else if(q.includes("what is data")){
-        answer = "Data refers to information processed or stored by a computer.";
-    } else if(q.includes("what is cpu")){
-        answer = "CPU stands for Central Processing Unit; it executes instructions of a computer program.";
-    } else if(q.includes("what is ram")){
-        answer = "RAM (Random Access Memory) is temporary memory used by computers to store data for active processes.";
-    } else if(q.includes("what is an operating system")){
-        answer = "An Operating System is software that manages computer hardware and provides services for programs.";
-    } else if(q.includes("what is a network")){
-        answer = "A network is a collection of connected devices that can communicate and share resources.";
-    } else if(q.includes("what is cloud computing")){
-        answer = "Cloud computing is the delivery of computing services over the internet, including storage and processing.";
-    } else if(q.includes("what is artificial neural network")){
-        answer = "An Artificial Neural Network is a computing system inspired by biological neural networks that learn patterns from data.";
-
-    /* existing definitions / why / how */
+    /* definitions */
     else if(q.startsWith("what is ai")){
         answer = "Artificial Intelligence is the ability of machines to simulate human reasoning, learning, and decision-making.";
     }
@@ -223,6 +178,8 @@ function handleQuestion(question){
     else if(q.startsWith("what is css")){
         answer = "CSS is used to style HTML elements, controlling layout, colors, fonts, and more.";
     }
+
+    /* why / how */
     else if(q.includes("why is the sky blue")){
         answer = "The sky appears blue due to the scattering of sunlight by the atmosphere.";
     }
@@ -237,6 +194,7 @@ function handleQuestion(question){
     }
     else if(q.includes("blockchain")){
         answer = "Blockchain stores data in a chain of blocks, secured by cryptography and consensus mechanisms.";
+    }
 
     /* advanced math */
     else{
@@ -246,14 +204,14 @@ function handleQuestion(question){
                 .replace(/sqrt\(([^)]+)\)/g,"Math.sqrt($1)")
                 .replace(/(\d+)\s*%\s*of\s*(\d+)/g,"($1/100)*$2");
 
-            if(/^[0-9+\-*/().<>=! a-zA-Z]+$/.test(expr)){
+            if(/^[0-9+\-*/().<>=! ]+$/.test(expr)){
                 answer = "Result: " + eval(expr);
             }
         }catch{}
     }
 
     if(!answer){
-        answer = "I’m sorry. I’m still under development and currently running offline. I can only answer a limited set of predefined questions.I humbly apologize for my inconvenience";
+        answer = "I’m sorry. I’m still under development and currently running offline. I can only answer a limited set of predefined questions.I humbluy apologize for my inconvenience";
     }
 
     const block = document.createElement("div");
@@ -266,4 +224,3 @@ function handleQuestion(question){
 
 </body>
 </html>
-
