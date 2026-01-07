@@ -78,12 +78,15 @@ const fontSize = 18;
 let columns = 0;
 let drops = [];
 
-// Set canvas size and recalc columns/drops
+// Set canvas size and recalc columns/drops properly
 function setCanvasSize(){
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     columns = Math.floor(canvas.width / fontSize);
-    drops = Array(columns).fill(1);
+    drops.length = columns;
+    for(let i = 0; i < columns; i++){
+        drops[i] = 1; // initialize each drop
+    }
 }
 setCanvasSize();
 window.addEventListener("resize", setCanvasSize);
