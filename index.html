@@ -73,18 +73,20 @@ input{
 /* ================= MATRIX BACKGROUND ================= */
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
+const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@";
+const fontSize = 18;
+let columns = 0;
+let drops = [];
 
+// Set canvas size and recalc columns/drops
 function setCanvasSize(){
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    columns = Math.floor(canvas.width / fontSize);
+    drops = Array(columns).fill(1);
 }
 setCanvasSize();
 window.addEventListener("resize", setCanvasSize);
-
-const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@";
-const fontSize = 18;
-const columns = Math.floor(canvas.width / fontSize);
-const drops = Array(columns).fill(1);
 
 function drawMatrix() {
     ctx.fillStyle = "rgba(0,0,0,0.05)";
@@ -167,7 +169,7 @@ function handleQuestion(question){
     else if(q.includes("who made you")){
         answer = "Sriram Pathruni";
 
-    /* new nice questions with accurate answers */
+    /* new questions (your choice) */
     } else if(q.startsWith("define computer")){
         answer = "A computer is an electronic device that processes data according to instructions.";
     } else if(q.startsWith("define ai")){
