@@ -22,7 +22,6 @@ canvas{
     height:55vh;
     margin:10vh auto;
     background: url("https://i.postimg.cc/xCW7Cmyw/f9a59a60-003a-4d7f-90ee-843b0851fd72.png");
-");  /* your image file name */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -75,8 +74,12 @@ input{
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+function setCanvasSize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+setCanvasSize();
+window.addEventListener("resize", setCanvasSize);
 
 const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@";
 const fontSize = 18;
