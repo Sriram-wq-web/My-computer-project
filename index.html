@@ -161,40 +161,9 @@ function handleQuestion(question){
         answer = "I am Void AI, designed to simulate intelligent conversation offline.";
     }
     else if(q.includes("who made you")){
-        answer = "Sriram Pathruni";
+        answer = "Sriram Pathruni, kavin kashyap, shreyas sreedharan";
 
-    /* new nice questions with accurate answers */
-    } else if(q.startsWith("define computer")){
-        answer = "A computer is an electronic device that processes data according to instructions.";
-    } else if(q.startsWith("define ai")){
-        answer = "Artificial Intelligence is the ability of machines to simulate human reasoning, learning, and decision-making.";
-    } else if(q.startsWith("define machine learning")){
-        answer = "Machine Learning is a subset of AI that allows systems to learn patterns from data.";
-    } else if(q.startsWith("what is programming")){
-        answer = "Programming is the process of writing instructions for computers to perform tasks.";
-    } else if(q.startsWith("what is software")){
-        answer = "Software is a set of programs that perform specific tasks on a computer.";
-    } else if(q.startsWith("what is hardware")){
-        answer = "Hardware refers to the physical components of a computer system.";
-    } else if(q.startsWith("what is the internet")){
-        answer = "The internet is a global network of interconnected computers that communicate using standardized protocols.";
-    } else if(q.includes("explain blockchain") || q.includes("how does blockchain work")){
-        answer = "Blockchain stores data in a chain of blocks, secured by cryptography and consensus mechanisms.";
-    } else if(q.includes("what is data")){
-        answer = "Data refers to information processed or stored by a computer.";
-    } else if(q.includes("what is cpu")){
-        answer = "CPU stands for Central Processing Unit; it executes instructions of a computer program.";
-    } else if(q.includes("what is ram")){
-        answer = "RAM (Random Access Memory) is temporary memory used by computers to store data for active processes.";
-    } else if(q.includes("what is an operating system")){
-        answer = "An Operating System is software that manages computer hardware and provides services for programs.";
-    } else if(q.includes("what is a network")){
-        answer = "A network is a collection of connected devices that can communicate and share resources.";
-    } else if(q.includes("what is cloud computing")){
-        answer = "Cloud computing is the delivery of computing services over the internet, including storage and processing.";
-    } else if(q.includes("what is artificial neural network")){
-        answer = "An Artificial Neural Network is a computing system inspired by biological neural networks that learn patterns from data.";
-
+    
     /* existing definitions / why / how */
     else if(q.startsWith("what is ai")){
         answer = "Artificial Intelligence is the ability of machines to simulate human reasoning, learning, and decision-making.";
@@ -229,6 +198,7 @@ function handleQuestion(question){
     else if(q.includes("blockchain")){
         answer = "Blockchain stores data in a chain of blocks, secured by cryptography and consensus mechanisms.";
 
+      
     /* advanced math */
     else{
         try{
@@ -257,3 +227,4 @@ function handleQuestion(question){
 
 </body>
 </html>
+
