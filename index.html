@@ -204,14 +204,14 @@ function handleQuestion(question){
                 .replace(/sqrt\(([^)]+)\)/g,"Math.sqrt($1)")
                 .replace(/(\d+)\s*%\s*of\s*(\d+)/g,"($1/100)*$2");
 
-            if(/^[0-9+\-*/().<>=! ]+$/.test(expr)){
+            if(/^[0-9+\-*/().<>=! a-zA-Z]+$/.test(expr)){
                 answer = "Result: " + eval(expr);
             }
         }catch{}
     }
 
     if(!answer){
-        answer = "I’m sorry. I’m still under development and currently running offline. I can only answer a limited set of predefined questions.I humbluy apologize for my inconvenience";
+        answer = "I’m sorry. I’m still under development and currently running offline. I can only answer a limited set of predefined questions.I humbly apologize for my inconvenience";
     }
 
     const block = document.createElement("div");
@@ -224,6 +224,7 @@ function handleQuestion(question){
 
 </body>
 </html>
+
 
 
 
