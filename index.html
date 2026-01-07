@@ -101,12 +101,13 @@ function drawMatrix() {
     }
 }
 setInterval(drawMatrix, 30);
+
 /* ================= AI TERMINAL LOGIC ================= */
 const input = document.getElementById("commandInput");
 const history = document.getElementById("history");
 const terminal = document.getElementById("terminal");
 
-const gratitudeSet = ["ok","thanks","thank you","thanks very much","thanks sooo much","nice","nice work","nice!","thanks a lot","thanks bro"];
+const gratitudeSet = ["ok","thanks","thank you","thanks very much","thanks sooo much","nice","nice work","nice!"];
 
 input.addEventListener("keydown", e=>{
     if(e.key==="Enter"){
@@ -139,16 +140,16 @@ function handleQuestion(question){
         answer = q.startsWith("nice") ? "Thanks! Glad you think so." : "You're welcome!";
     }
 
-    /* greetings */
-    else if(/^(hi|hello|hey|yo|hi bro|hello dude|hry dude|whats up|good morning|good afternoon|good evening)$/.test(q)){
+    /* greetings — ONLY if greeting-like */
+    else if(/^(hi|hello|hey|yo|hi bro|hello dude|hry dude|whats up)$/.test(q)){
         answer = "Hey! I’m online, what’s up?";
     }
 
-    /* identity / AI info */
+    /* identity */
     else if(q.includes("who are you")){
         answer = "I am Void AI, an offline artificial intelligence running inside this terminal.";
     }
-    else if(q.includes("your name") || q.includes("what is your name")){
+    else if(q.includes("your name")){
         answer = "I am called Void AI.";
     }
     else if(q.includes("what can you do")){
@@ -157,14 +158,8 @@ function handleQuestion(question){
     else if(q.includes("are you ai")){
         answer = "Yes, I am an offline AI simulation.";
     }
-    else if(q.includes("tell me about yourself")){
-        answer = "I am Void AI, designed to simulate intelligent conversation offline.";
-    }
-    else if(q.includes("who made you")){
-        answer = "Sriram Pathruni, kavin kashyap, shreyas sreedharan";
 
-    
-    /* existing definitions / why / how */
+    /* definitions */
     else if(q.startsWith("what is ai")){
         answer = "Artificial Intelligence is the ability of machines to simulate human reasoning, learning, and decision-making.";
     }
@@ -183,6 +178,8 @@ function handleQuestion(question){
     else if(q.startsWith("what is css")){
         answer = "CSS is used to style HTML elements, controlling layout, colors, fonts, and more.";
     }
+
+    /* why / how */
     else if(q.includes("why is the sky blue")){
         answer = "The sky appears blue due to the scattering of sunlight by the atmosphere.";
     }
@@ -197,8 +194,8 @@ function handleQuestion(question){
     }
     else if(q.includes("blockchain")){
         answer = "Blockchain stores data in a chain of blocks, secured by cryptography and consensus mechanisms.";
+    }
 
-      
     /* advanced math */
     else{
         try{
@@ -207,14 +204,14 @@ function handleQuestion(question){
                 .replace(/sqrt\(([^)]+)\)/g,"Math.sqrt($1)")
                 .replace(/(\d+)\s*%\s*of\s*(\d+)/g,"($1/100)*$2");
 
-            if(/^[0-9+\-*/().<>=! a-zA-Z]+$/.test(expr)){
+            if(/^[0-9+\-*/().<>=! ]+$/.test(expr)){
                 answer = "Result: " + eval(expr);
             }
         }catch{}
     }
 
     if(!answer){
-        answer = "I’m sorry. I’m still under development and currently running offline. I can only answer a limited set of predefined questions.I humbly apologize for my inconvenience";
+        answer = "I’m sorry. I’m still under development and currently running offline. I can only answer a limited set of predefined questions.I humbluy apologize for my inconvenience";
     }
 
     const block = document.createElement("div");
