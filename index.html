@@ -22,9 +22,9 @@ canvas{
     height:55vh;
     margin:10vh auto;
     background: url("terminal-bg.png");  /* your image file name */
-background-size: cover;
-background-position: center;
-background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 
     border:2px solid #fff;
     box-shadow:0 0 20px #fff;
@@ -43,10 +43,11 @@ input{
     width:100%;
     font-size:1.25em;
 }
+/* ================= FIXED BACKGROUND ================= */
 #terminal .output,
 #terminal .prompt,
 #terminal input {
-    background: rgba(0,0,0,0.6);  /* dark highlight behind text */
+    background: rgba(0,0,0,0.2);  /* lighter so background shows */
     padding: 4px 6px;
     border-radius: 4px;
 }
@@ -222,6 +223,4 @@ function handleQuestion(question){
 
 </body>
 </html>
-
-
 
